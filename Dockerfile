@@ -12,13 +12,14 @@ RUN npm install --force
 # Tüm proje dosyalarını kopyala
 COPY . .
 
-# --- KRİTİK TAMİR ADIMI ---
-# 1. Klasörün var olduğundan emin ol
-RUN mkdir -p public/background-images/
-
-# 2. Hata veren dosyayı sil ve yerine 1x1 piksellik sağlam bir görsel oluştur (Base64)
-RUN echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" | \
-    base64 -d > public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg
+# --- TOPLU TAMİR ADIMI ---
+# Klasörü temizle/oluştur ve hata veren tüm dosyaları sağlam 1x1 piksellik görsellerle değiştir
+RUN mkdir -p public/background-images/ && \
+    export DUMMY="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" && \
+    echo $DUMMY | base64 -d > public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg && \
+    echo $DUMMY | base64 -d > public/background-images/samantha-gades-BlIhVfXbi9s-unsplash.jpg && \
+    echo $DUMMY | base64 -d > public/background-images/stephan-louis-y_6S9shS_L0-unsplash.jpg && \
+    echo $DUMMY | base64 -d > public/background-images/u_8XvA4P9B8-unsplash.jpg
 # ---------------------------
 
 ENV NEXT_TELEMETRY_DISABLED=1
