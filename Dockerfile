@@ -1,29 +1,30 @@
 FROM node:20-alpine
 
-# Gerekli araçları ekle (curl ve kütüphane)
-RUN apk add --no-cache libc6-compat curl
+# Gerekli sistem paketleri
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Bağımlılıkları kopyala
+# Bağımlılıkları kopyala ve yükle
 COPY package*.json ./
-
-# Bağımlılıkları yükle
 RUN npm install --force
 
-# Tüm dosyaları kopyala
+# Tüm proje dosyalarını kopyala
 COPY . .
 
-# --- KRİTİK ADIM: Bozuk resmi sağlam olanla değiştiriyoruz ---
-# Bu komut, bozuk olan unsplash görselini GitHub'daki orijinal sağlam sürümüyle değiştirir.
-RUN curl -L -o public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg \
-    "https://raw.githubusercontent.com/livekit/meet/main/public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg" || true
-# -----------------------------------------------------------
+# --- KRİTİK TAMİR ADIMI ---
+# 1. Klasörün var olduğundan emin ol
+RUN mkdir -p public/background-images/
+
+# 2. Hata veren dosyayı sil ve yerine 1x1 piksellik sağlam bir görsel oluştur (Base64)
+RUN echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" | \
+    base64 -d > public/background-images/ali-kazal-tbw_KQE3Cbg-unsplash.jpg
+# ---------------------------
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=development
 
 EXPOSE 3000
 
-# Projeyi başlat
+# Geliştirme modunda başlat
 CMD ["npm", "run", "dev"]
